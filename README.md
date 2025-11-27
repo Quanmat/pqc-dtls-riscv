@@ -1,6 +1,6 @@
 ```
 git clone https://github.com/QTrino-Labs-Pvt-Ltd/C_Env_Sim.git
-cd HSM_BETA/
+cd C_Env_Sim
 ```
 
 ```
@@ -10,21 +10,12 @@ source litex-env/bin/activate
 
 ```
 chmod +x litex_setup.py
-```
-
-```
 ./litex_setup.py --init --install
-```
-
-```
 pip3 install meson ninja
 ```
 
 ```
 sudo ./litex_setup.py --gcc=riscv
-```
-
-```
 sudo apt install libevent-dev libjson-c-dev verilator
 ```
 
