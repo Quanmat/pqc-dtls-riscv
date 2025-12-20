@@ -6,8 +6,8 @@ __DYNAMIC = 0;
 INCLUDE generated/regions.ld
 
 /* Default sizes if not defined externally */
-_stack_size = DEFINED(_stack_size) ? _stack_size : 500k;
-_heap_size  = DEFINED(_heap_size)  ? _heap_size  : 500k;
+_stack_size = 1M;
+_heap_size  = 1M;
 
 SECTIONS
 {

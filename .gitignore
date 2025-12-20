@@ -33,3 +33,5 @@ boot/crt0.o
 boot/main.d
 boot/main.o
 build
+*.o
+*.d

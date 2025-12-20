@@ -21,6 +21,10 @@
 
 #include <wolfssl/wolfcrypt/libwolfssl_sources.h>
 
+extern uint64_t read_cycle64(void);
+extern uint64_t dilith_start_clks;
+extern uint64_t dilith_end_clks;
+
 /*
  * WOLFSSL_SMALL_CERT_VERIFY:
  *     Verify the certificate signature without using DecodedCert. Doubles up
@@ -16054,6 +16058,7 @@ int ProcessPeerCerts(WOLFSSL* ssl, byte* input, word32* inOutIdx,
         {
             /* peer's, may not have one if blank client cert sent by TLSv1.2 */
             if (args->count > 0) {
+                dilith_start_clks = read_cycle64();
                 WOLFSSL_MSG("Verifying Peer's cert");
 
                 /* select peer cert (first one) */
@@ -16093,6 +16098,7 @@ int ProcessPeerCerts(WOLFSSL* ssl, byte* input, word32* inOutIdx,
             #endif
 
                 if (ret == 0) {
+                    dilith_end_clks = read_cycle64();
                     WOLFSSL_MSG("Verified Peer's cert");
                 #if defined(OPENSSL_EXTRA) || defined(OPENSSL_EXTRA_X509_SMALL)
                     if (ssl->peerVerifyRet == 0) /* Return first cert error here */

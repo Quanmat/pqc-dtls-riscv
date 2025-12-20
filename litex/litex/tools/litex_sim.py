@@ -176,13 +176,14 @@ class SimSoC(SoCCore):
         sim_debug              = False,
         trace_reset_on         = False,
         with_jtag              = False,
+        sys_clk_freq          = 1e6,
         **kwargs):
 
         # Platform ---------------------------------------------------------------------------------
         platform = Platform()
 
         # Parameters -------------------------------------------------------------------------------
-        sys_clk_freq = int(1e6)
+        sys_clk_freq = int(sys_clk_freq)
 
         # CRG --------------------------------------------------------------------------------------
         self.crg = CRG(platform.request("sys_clk"))
@@ -420,6 +421,7 @@ def generate_gtkw_savefile(builder, vns, trace_fst):
             dfi_group("dfi commands", ["rddata"])
 
 def sim_args(parser):
+    parser.add_argument("--sys-clk-freq",         default=1e6,   help="System clock frequency.")
     # ROM / RAM.
     parser.add_argument("--rom-init",             default=None,            help="ROM init file (.bin or .json).")
     parser.add_argument("--ram-init",             default=None,            help="RAM init file (.bin or .json).")
@@ -479,7 +481,7 @@ def main():
 
     soc_kwargs = soc_core_argdict(args)
 
-    sys_clk_freq = int(1e6)
+    sys_clk_freq = int(args.sys_clk_freq) if args.sys_clk_freq else int(1e6)
     sim_config   = SimConfig()
     sim_config.add_clocker("sys_clk", freq_hz=sys_clk_freq)
 
@@ -553,6 +555,7 @@ def main():
 
     # SoC ------------------------------------------------------------------------------------------
     soc = SimSoC(
+        sys_clk_freq              = sys_clk_freq,
         with_sdram             = args.with_sdram,
         with_sdram_bist        = args.with_sdram_bist,
         with_ethernet          = args.with_ethernet,
