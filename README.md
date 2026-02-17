@@ -8,7 +8,7 @@
 Secure communication for constrained IoT devices must remain robust even against future quantum adversaries.
 This project implements a PQC-enabled DTLS 1.3 stack on a bare-metal RISC-V client (VexRiscv), simulated using LiteX and Verilator.
 
-It integrates Kyber (KEM) and Dilithium (signatures) into a minimized wolfSSL-based DTLS stack and validates end-to-end communication against a host-side server. The networking layer replaces polling with an interrupt-driven Ethernet ISR and an RX ring buffer to prevent packet loss during computationally intensive PQC operations. The firmware includes cycle-accurate latency measurement (rdcycle CSR), heap profiling, and systematic compiler and cipher-suite optimizations (e.g., ChaCha20-Poly1305) to balance memory footprint, handshake latency, and throughput. The repository provides full toolchain automation, certificate generation, simulation setup, benchmark instrumentation, demo logs, and packet captures to ensure reproducibility.
+It integrates Kyber (KEM) and Dilithium (signatures) into a minimized wolfSSL-based DTLS stack and validates end-to-end communication with a host-side server. The networking layer replaces polling with an interrupt-driven Ethernet ISR and an RX ring buffer to prevent packet loss during computationally intensive PQC operations. The firmware includes cycle-accurate latency measurement (rdcycle CSR), heap profiling, and systematic compiler and cipher-suite optimizations (e.g., ChaCha20-Poly1305) to balance memory footprint, handshake latency, and throughput. The repository provides full toolchain automation, certificate generation, simulation setup, benchmark instrumentation, demo logs, and packet captures to ensure reproducibility.
 
 This solution was developed for the [QTrino Labs problem statement](https://drive.google.com/file/d/17WdoZTA7-rwXUIRJVGoSy-bnlKaQr2N3/view?usp=sharing) and was awarded the Gold prize at Inter IIT Tech Meet 14.0.
 
@@ -57,7 +57,7 @@ The project provides a **master script** to automate the entire environment setu
 *   **OS:** Ubuntu Linux (or any other Debian derivative)
 
 ### Method 1: One-Shot Setup
-The script `setup.sh`  runs the entire initialization process. It installs dependencies, sets up the network, builds the host server, and compiles the RISC-V firmware.
+The script `setup.sh` runs the entire initialization process. It installs dependencies, sets up the network, builds the host server, and compiles the RISC-V firmware.
 
 **Command:**
 ```bash
@@ -304,7 +304,7 @@ You can also refer to the [client](https://drive.google.com/file/d/1hT5YuR1TBtSR
 (See full report for detailed methodology and breakdown.)
 
 ### Troubleshooting
-See [our report](https://drive.google.com/file/d/1WS31zLKAzv8hEbAL82r3Hy0q4Qn1P_ge/view) for any troubleshooting.
+See [our report](https://drive.google.com/file/d/1WS31zLKAzv8hEbAL82r3Hy0q4Qn1P_ge/view) for troubleshooting.
 
 ### Optimization
 See [our report](https://drive.google.com/file/d/1RzjmnQwoQik7tjSrbiXQEQ1EEtdAmovE/view) for optimization.
@@ -321,7 +321,7 @@ See [our report](https://drive.google.com/file/d/1RzjmnQwoQik7tjSrbiXQEQ1EEtdAmo
   Five-minute walkthrough delivered during the final evaluation.
 
 ### NOTE:
-Present system can be configured easily into an end-to-end communication with a capable server. It can also be configured into an multiple message communcation system with a capable server
+The present system can be easily configured for end-to-end communication with a capable server. It can also be configured for multiple-message communication with a capable server.
 
 ## RESOURCES
 ### Constraint_Env_Sim (RISC-V IoT + PQC Environment)
