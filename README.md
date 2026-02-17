@@ -1,4 +1,50 @@
-# How to Compile the RISC-V Firmware
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Award](https://img.shields.io/badge/award-Gold%20Prize-brightgreen.svg)]()
+[![Report](https://img.shields.io/badge/report-technical%20report-blueviolet.svg)](https://drive.google.com/file/d/1E9gbMNrSTL7WNWUvcyx_RmMLJP29DdQH/view?usp=sharing)
+[![Demo](https://img.shields.io/badge/demo-video-blue.svg)](https://drive.google.com/file/d/1GhtpFJ6wpb3meYf1uiJ_hL0hbMshxEvS/view?usp=sharing)
+
+# PQC-DTLS on Bare-Metal RISC-V — Post-Quantum DTLS 1.3 
+## Introduction
+Secure communication for constrained IoT devices must remain robust even against future quantum adversaries.
+This project implements a PQC-enabled DTLS 1.3 stack on a bare-metal RISC-V client (VexRiscv), simulated using LiteX and Verilator.
+
+It integrates Kyber (KEM) and Dilithium (signatures) into a minimized wolfSSL-based DTLS stack and validates end-to-end communication against a host-side server. The networking layer replaces polling with an interrupt-driven Ethernet ISR and an RX ring buffer to prevent packet loss during computationally intensive PQC operations. The firmware includes cycle-accurate latency measurement (rdcycle CSR), heap profiling, and systematic compiler and cipher-suite optimizations (e.g., ChaCha20-Poly1305) to balance memory footprint, handshake latency, and throughput. The repository provides full toolchain automation, certificate generation, simulation setup, benchmark instrumentation, demo logs, and packet captures to ensure reproducibility.
+
+This solution was developed for the [QTrino Labs problem statement](https://drive.google.com/file/d/17WdoZTA7-rwXUIRJVGoSy-bnlKaQr2N3/view?usp=sharing) and was awarded the Gold prize at Inter IIT Tech Meet 14.0.
+
+---
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Quickstart](#quickstart)
+- [Build & Setup: (How to Compile the RISC-V Firmware)](#build--setup-how-to-compile-the-risc-v-firmware)
+  - [Method 1: One-Shot Setup](#method-1-one-shot-setup)
+  - [Method 2: Incremental Steps](#method-2-incremental-steps)
+- [How to Run on LiteX + Verilator](#how-to-run-on-litex--verilator)
+- [How to Start DTLS Server](#how-to-start-dtls-server)
+- [Directory Structure Explanation](#directory-structure-explanation)
+- [Network Monitoring](#network-monitoring)
+- [Full Architecture](#full-architecture)
+- [Demo](#demo)
+- [Performance Metrics](#performance-metrics-after-optimizations-100-mhz-simulation)
+- [Troubleshooting](#troubleshooting)
+- [Optimization](#optimization)
+- [Report](#report)
+- [Resources](#resources)
+
+
+
+---
+## Quickstart
+
+```bash
+./setup.sh
+./scripts/server.sh
+./scripts/client.sh
+```
+
+## Build & Setup: (How to Compile the RISC-V Firmware)
 
 The project provides a **master script** to automate the entire environment setup, toolchain installation, and compilation. Alternatively, scripts can be run individually for granular control.
 
@@ -9,7 +55,7 @@ The project provides a **master script** to automate the entire environment setu
 *   **Cert generation:** `openssl`, `liboqs`, `oqs-provider`
 *   **OS:** Ubuntu Linux (or any other Debian derivative)
 
-## Method 1: One-Shot Setup
+### Method 1: One-Shot Setup
 The script `setup.sh`  runs the entire initialization process. It installs dependencies, sets up the network, builds the host server, and compiles the RISC-V firmware.
 
 **Command:**
@@ -18,7 +64,7 @@ $ ./setup.sh
 ```
 *Note: You will be prompted for your `sudo` password to install system packages and configure the network TAP interface.*
 
-## Method 2: Incremental Steps
+### Method 2: Incremental Steps
 
 If you prefer to run the steps manually or need to debug a specific stage, execute the scripts in the following order:
 
@@ -70,7 +116,7 @@ After running `setup.sh` or `make`, the following files will be generated:
 > ```
 > to be run after change for rebuilding `boot.bin`.
 
-# How to Run on LiteX + Verilator
+## How to Run on LiteX + Verilator
 
 The project uses `litex_sim` to simulate a VexRiscv SoC.
 
@@ -104,7 +150,7 @@ The `client.sh` script executes `litex_sim` with the following specific paramete
 *   **Firmware:** Loaded via `--ram-init=boot.bin`
 ---
 
-# How to Start DTLS Server
+## How to Start DTLS Server
 
 The host-side server acts as the endpoint for the RISC-V client. It is a custom build of WolfSSL supporting PQC.
 
@@ -143,7 +189,7 @@ The host server is configured with the following flags:
 
 ---
 
-# Directory Structure Explanation
+## Directory Structure Explanation
 
 ```
 .
@@ -226,7 +272,7 @@ Modified and new files/directories:
     *   Contains the LiteX SoC generator tools.
     *   *Note:* `litex/tools/litex_sim.py` has been modified to accept `--sys-clk-freq`.
 
-## Network Monitoring
+### Network Monitoring
 
 Network dump for `tap0` can be obtained by
 ```bash
@@ -234,62 +280,73 @@ $ sudo tcpdump -i tap0 -n -vv -w dump.pcap
 ```
 while the client/server are running.
 
-# Full Architecture
+## Full Architecture
+
+The bare-metal RISC-V firmware (VexRiscv) runs inside a LiteX + Verilator simulated SoC and communicates with a host-side WolfSSL DTLS server via a TAP-based virtual Ethernet interface. The handshake and encrypted communication can be observed through logs and packet captures (Wireshark).
 
 ![Wireshark Packet Capture](imgs/Part1Final.png "Wireshark Packet Capture")
 ![Wireshark Packet Capture](imgs/Part2final.png "Wireshark Packet Capture")
 
-# Demo
-
-## Watch the demo [here](https://drive.google.com/file/d/1GhtpFJ6wpb3meYf1uiJ_hL0hbMshxEvS/view?usp=sharing).
+## Demo
+### Watch the demo [here](https://drive.google.com/file/d/1GhtpFJ6wpb3meYf1uiJ_hL0hbMshxEvS/view?usp=sharing).
 
 You can also refer to the [client](https://drive.google.com/file/d/1hT5YuR1TBtSRf6FHjgt948c517fZ0of7/view?usp=sharing) and [server logs](https://drive.google.com/file/d/1p7gXRa4ZikHE0p91mM-Oh0COTI8sPdJl/view?usp=sharing).
 
-![Wireshark Packet Capture](imgs/wireshark.jpeg "Wireshark Packet Capture")
+![Wireshark Packet Capture](imgs/wireshark.jpeg "Wireshark Packet Capture") 
 
-# Troubleshooting
+### Performance Metrics (After optimizations) (100 MHz Simulation)
 
-### See [our report](https://drive.google.com/file/d/1WS31zLKAzv8hEbAL82r3Hy0q4Qn1P_ge/view) for any troubleshooting.
+- DTLS 1.3 Handshake Latency: ~129 ms  
+- Peak Heap Usage: ~71 KB  
+- ROM Footprint: ~320 KB  
+- Post-handshake Throughput: ~98 KB/s  
 
-# Optimization
+(See full report for detailed methodology and breakdown.)
 
-### See [our report](https://drive.google.com/file/d/1RzjmnQwoQik7tjSrbiXQEQ1EEtdAmovE/view) for optimization.
+### Troubleshooting
+See [our report](https://drive.google.com/file/d/1WS31zLKAzv8hEbAL82r3Hy0q4Qn1P_ge/view) for any troubleshooting.
 
-# Report
+### Optimization
+See [our report](https://drive.google.com/file/d/1RzjmnQwoQik7tjSrbiXQEQ1EEtdAmovE/view) for optimization.
 
-### [This](https://drive.google.com/file/d/1E9gbMNrSTL7WNWUvcyx_RmMLJP29DdQH/view?usp=sharing) is our final technical report submission.
+### Technical Report
+- [Final Technical Report (PDF)](https://drive.google.com/file/d/1E9gbMNrSTL7WNWUvcyx_RmMLJP29DdQH/view?usp=sharing)  
+  Detailed design, implementation methodology, benchmarking, and optimization analysis.
 
-## NOTE:
-### Our current submission can be configured easily into an end-to-end communication with a capable server.
-### It can also be configured into an multiple message communcation system with a capable server.
+### Final Presentation
+- [Final Presentation Slides](https://drive.google.com/file/d/1BZ4qxb3dLaaj_fClMu1z2nHJ6MAH235y/view?usp=sharing)  
+  Summary of problem context, architecture, key engineering decisions, and results.
 
-<br>
+- [Presentation Speech Transcript](https://docs.google.com/document/d/1SHqU9SBc4xdzQriFvMwKvgTG4m8U65jbx9xysC6LW7o/edit?usp=sharing)  
+  Five-minute walkthrough delivered during the final evaluation.
 
-# RESOURCES
+### NOTE:
+Present system can be configured easily into an end-to-end communication with a capable server. It can also be configured into an multiple message communcation system with a capable server
 
-## Constraint_Env_Sim (RISC-V IoT + PQC Environment)
+## RESOURCES
+### Constraint_Env_Sim (RISC-V IoT + PQC Environment)
 - Official Main Repo — https://github.com/QTrino-Labs-Pvt-Ltd/Constraint_Env_Sim
 
 
-## 1. TRNG (True Random Number Generator) Resources
+### 1. TRNG (True Random Number Generator) Resources
 - OpenTRNG — https://opentrng.org
 - Random.org (Entropy source research) — https://www.random.org
 - NeoTRNG (Open-source HDL TRNG) — https://github.com/stnolting/neoTRNG
 - OpenTRNG Noisy Ring Oscillator Emulator — https://opentrng.org/docs/emulator#emulate-noisy-ring-oscillators
 
-## 2. Compiler Optimization & Performance Profiling
+### 2. Compiler Optimization & Performance Profiling
 - GCC Optimization Options — https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
 - Brendan Gregg’s perf-tools — https://github.com/brendangregg/perf-tools
 - perf-record Manual — https://man7.org/linux/man-pages/man1/perf-record.1.html
 - Brendan Gregg’s perf & Dynamic Tracing Examples — https://www.brendangregg.com/perf.html#DynamicTracingEg
 
-## 3. DTLS 1.3 / RFCs / Protocols
+### 3. DTLS 1.3 / RFCs / Protocols
 - RFC 9147 — DTLS 1.3 Specification  
   https://datatracker.ietf.org/doc/rfc9147/
 - OpenSSL DTLS Timer Callback Reference  
   https://docs.openssl.org/1.1.1/man3/DTLS_set_timer_cb/
 
-## 4. wolfSSL / wolfCrypt Integration Resources
+### 4. wolfSSL / wolfCrypt Integration Resources
 - wolfSSL DTLS Example Repository —  
   https://github.com/wolfSSL/wolfssl-examples/tree/master/dtls
 - wolfSSL Forums —  
@@ -301,25 +358,29 @@ You can also refer to the [client](https://drive.google.com/file/d/1hT5YuR1TBtSR
 - wolfSSL 5.8.4 (complete source archive) —  
   https://fossies.org/linux/misc/wolfssl-5.8.4.zip/
 
-## 5. RISC-V Development & Post-Quantum Crypto Resources
+### 5. RISC-V Development & Post-Quantum Crypto Resources
 - RISC-V Getting Started Guide —  
   https://risc-v-getting-started-guide.readthedocs.io/en/latest/
 - liboqs (Open Quantum Safe PQC Library) —  
   https://github.com/open-quantum-safe/liboqs
 
-## 6. Cryptographic Benchmarking Tools (Used for rd cycle logic buildup)
+### 6. Cryptographic Benchmarking Tools (Used for rd cycle logic buildup)
 - SUPERCOP (System for Unified Performance Evaluation Related to Cryptographic Operations and Primitives) —  
   https://bench.cr.yp.to/supercop.html
 
-## 7. RISC-V Emulators
+### 7. RISC-V Emulators
 - QEMU (Full-system & user-mode RISC-V emulator) — https://www.qemu.org/
 
-## 8. PQC Learning & Certification Resources
+### 8. PQC Learning & Certification Resources
 - PQC Documentation (PKI India) —  
   https://learn.pkiindia.in/pqc-documentation.pdf
 - OpenSSL PQC Certificates Reference —  
   https://docta.ucm.es/rest/api/core/bitstreams/b9fa8883-6106-41ae-90ff-f36f3c7271e5/content
 
-## 9. Research Papers
+### 9. Research Papers
 - *Optimized Software Implementation of Keccak, Kyber, and Dilithium on RV32/64IMB-V* —  
   https://www.researchgate.net/publication/386739615_Optimized_Software_Implementation_of_Keccak_Kyber_and_Dilithium_on_RV3264IMBV
+
+
+This repository serves as a reference implementation for PQC-secured communication on constrained RISC-V systems and can be extended to real-world IoT, medical, and aerospace deployments.
+
