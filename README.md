@@ -27,10 +27,11 @@ This solution was developed for the [QTrino Labs problem statement](https://driv
 - [Network Monitoring](#network-monitoring)
 - [Full Architecture](#full-architecture)
 - [Demo](#demo)
-- [Performance Metrics](#performance-metrics-after-optimizations-100-mhz-simulation)
+- [Performance Metrics](#performance-metrics-100-mhz-simulation-post-optimization)
 - [Troubleshooting](#troubleshooting)
 - [Optimization](#optimization)
 - [Report](#report)
+- [Presentation](#presentation)
 - [Resources](#resources)
 
 
@@ -294,8 +295,7 @@ You can also refer to the [client](https://drive.google.com/file/d/1hT5YuR1TBtSR
 
 ![Wireshark Packet Capture](imgs/wireshark.jpeg "Wireshark Packet Capture") 
 
-### Performance Metrics (After optimizations) (100 MHz Simulation)
-
+### Performance Metrics (100 MHz Simulation, Post-Optimization)
 - DTLS 1.3 Handshake Latency: ~129 ms  
 - Peak Heap Usage: ~71 KB  
 - ROM Footprint: ~320 KB  
@@ -309,11 +309,11 @@ See [our report](https://drive.google.com/file/d/1WS31zLKAzv8hEbAL82r3Hy0q4Qn1P_
 ### Optimization
 See [our report](https://drive.google.com/file/d/1RzjmnQwoQik7tjSrbiXQEQ1EEtdAmovE/view) for optimization.
 
-### Technical Report
+### Report
 - [Final Technical Report (PDF)](https://drive.google.com/file/d/1E9gbMNrSTL7WNWUvcyx_RmMLJP29DdQH/view?usp=sharing)  
   Detailed design, implementation methodology, benchmarking, and optimization analysis.
 
-### Final Presentation
+### Presentation
 - [Final Presentation Slides](https://drive.google.com/file/d/1BZ4qxb3dLaaj_fClMu1z2nHJ6MAH235y/view?usp=sharing)  
   Summary of problem context, architecture, key engineering decisions, and results.
 
@@ -381,6 +381,6 @@ Present system can be configured easily into an end-to-end communication with a 
 - *Optimized Software Implementation of Keccak, Kyber, and Dilithium on RV32/64IMB-V* —  
   https://www.researchgate.net/publication/386739615_Optimized_Software_Implementation_of_Keccak_Kyber_and_Dilithium_on_RV3264IMBV
 
+---
 
 This repository serves as a reference implementation for PQC-secured communication on constrained RISC-V systems and can be extended to real-world IoT, medical, and aerospace deployments.
-
