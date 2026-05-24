@@ -32,6 +32,7 @@ This solution was developed for the [QTrino Labs problem statement](https://driv
 - [Optimization](#optimization)
 - [Report](#report)
 - [Presentation](#presentation)
+- [Core Contributors](#core-contributors)
 - [Resources](#resources)
 
 
@@ -319,6 +320,12 @@ See [our report](https://drive.google.com/file/d/1RzjmnQwoQik7tjSrbiXQEQ1EEtdAmo
 
 - [Presentation Speech Transcript](https://docs.google.com/document/d/1SHqU9SBc4xdzQriFvMwKvgTG4m8U65jbx9xysC6LW7o/edit?usp=sharing)  
   Five-minute walkthrough delivered during the final evaluation.
+  
+### Core Contributors
+- **Krishay Rathaure** *(Project Lead)* — [@Quanmat](https://github.com/Quanmat/)
+- **Tanish Yadav** — [@tanpsi](https://github.com/tanpsi)
+- **Akarsh Raj** — [@Akarsh-1A1](https://github.com/Akarsh-1A1)
+- **Sumit Modanwal** — [@sumitmodanwal962](https://github.com/sumitmodanwal962)
 
 ### NOTE:
 The present system can be easily configured for end-to-end communication with a capable server. It can also be configured for multiple-message communication with a capable server.
